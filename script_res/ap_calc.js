@@ -620,7 +620,7 @@ function calculate() {
         maxDamage = result.damage[result.damage.length-1] * hits;
         minPercent = Math.floor(minDamage * 1000 / p2.maxHP) / 10;
         maxPercent = Math.floor(maxDamage * 1000 / p2.maxHP) / 10;
-        damageText = minDamage + "-" + maxDamage + " (" + minPercent + " - " + maxPercent + "%)";
+        damageText =  minPercent + " - " + maxPercent + "%";
         koChanceText = patk.moves[m_num].bp === 0 && patk.moves[m_num].category !== "Status"? '<a href="https://www.youtube.com/watch?v=NFZjEgXIl1E&t=21s">how</a>'
                   : getKOChanceText(result.damage, patk.moves[m_num], pdef, field.getSide(side), patk.ability === 'Bad Dreams');
         var d = this.data();
