@@ -629,7 +629,8 @@ function calculate() {
         d[3] = damageText;
         d[4] = koChanceText;
         this.data(d);
-    }); 
+    });
+    table.draw(); 
 }
 
 $(".result-move").change(function() {
@@ -1133,7 +1134,7 @@ function getSelectOptions(arr, sort, defaultIdx) {
 }
 
 $(document).ready(function() {
-    var table = $('#damage-table').DataTable({'rowsGroup':[0,1], paging: false, searching: true, info:false, sDom: 'lrtip'});
+    var table = $('#damage-table').DataTable({'rowsGroup':[0,1], paging: false, searching: true, info:false, sDom: 'flrtip'});
     table.columns.adjust().draw();
     $("#gen9").prop("checked", true);
     $("#gen9").change();
