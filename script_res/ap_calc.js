@@ -1144,14 +1144,20 @@ function getSelectOptions(arr, sort, defaultIdx) {
 }
 
 $(document).ready(function() {
-    var table = $('#damage-table').DataTable({'rowsGroup':[0,1], paging: false, searching: true, info:false, sDom: 'flrtip',
-    "fnRowCallback": function(nRow, aData, iDisplayIndex, iDisplayIndexFull) {
-      var pokes = $('#damage-table').DataTable().column(0).data().unique().toArray();
-      var index = Array.prototype.indexOf.call(pokes,aData[0]);
-      console.log($('td',nRow));
-      if (index % 2 === 1) $('td', nRow).css("background-color", "#eaedf6");
-      else $('td', nRow).css("background-color", "#ffffff");
+    var table = $('#damage-table').DataTable({
+                    'rowsGroup':[0,1], 
+                    paging: false, searching: true, info:false,dom: '<"toolbar">frtip',
+                    "fnRowCallback": function(nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+                                        var pokes = $('#damage-table').DataTable().column(0).data().unique().toArray();
+                                        var index = Array.prototype.indexOf.call(pokes,aData[0]);
+                                        if (index % 2 === 1) $('td', nRow).css("background-color", "#eaedf6");
+                                        else $('td', nRow).css("background-color", "#ffffff");
     }});
+    $("div.toolbar").html('<button type="button" onclick="cleartable()">Clear Table</button>');
+    $('#damage-table').on('click', 'tr', function () {
+        var data = table.row(this).data();
+        table.rows( function ( idx, aData, node ) {return aData[0] === data[0];} ).remove().draw();
+    });
     table.columns.adjust().draw();
     $("#gen9").prop("checked", true);
     $("#gen9").change();

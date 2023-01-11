@@ -229,9 +229,15 @@ body, html {
 .panel-footer {
   background-color: #293131;
   padding: 15px 15px;
-  border-top: 5px solid #de2808;
+  /*border-top: 5px solid #de2808;*/
   border-top-right-radius: 2px;
   border-top-left-radius: 2px;
+}
+
+.toolbar {
+  float:left;
+  margin-top: 3px;
+  margin-left: 15px;
 }
 
 .panel-title {
