@@ -545,12 +545,20 @@ function addtotable() {
     var name = document.getElementById("setName").value;
     var nat = NATURES[poke.nature]
     var gen = document.querySelectorAll('input[name=gen]:checked')[0].value;
-    var spread = gen > 2 ? poke.HPEVs : poke.maxHP;
-    var stats = gen > 2 ? poke.evs : poke.rawStats;
+    var spread = poke.maxHP.toString().padStart(3,' ');
+    var stats = poke.rawStats;
     for(var stat in stats){
-        if(nat[0] === stat) spread += ' / <font color="red">' + stats[stat] + '</font>';
-        else if (nat[1] === stat) spread += ' / <font color="#2b8afd">' + stats[stat] + '</font>';
-        else spread += ' / '+stats[stat];
+        if(nat[0] === stat) spread += '/<font color="red">' + stats[stat] + '</font>';
+        else if (nat[1] === stat) spread += '/<font color="#2b8afd">' + stats[stat] + '</font>';
+        else spread += '/'+stats[stat];
+    }
+    if (gen > 2){
+        var ev_spread = poke.HPEVs;
+        stats = poke.evs;
+        for(var stat in stats){
+            ev_spread += '/'+stats[stat].toString().padStart(poke.rawStats[stat].toString().length,' ');
+        }
+        spread = '<p style="text-align: center;white-space: pre;font-family:Courier;">'+spread+"<br>"+ev_spread+"</p>"
     }
     var table = $("#damage-table").DataTable();
     for(var move in poke.moves) {
@@ -1020,7 +1028,7 @@ $(".gen").change(function () {
 
     $(".set-selector").val(getSetOptions()[gen > 3 ? 1 : gen === 1 ? 5 : 3].id);
     $(".set-selector").change();
-    document.getElementById('stats-name').innerHTML = gen > 2? "EV Spread" : "Stat Spread";
+    //document.getElementById('stats-name').innerHTML = gen > 2? "EV Spread" : "Stat Spread";
 });
 
 function clearField() {
