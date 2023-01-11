@@ -201,7 +201,7 @@ body, html {
 
 .wrapper{
     padding:0 1em;
-    max-width:1338px;
+    max-width:1500px;
     margin:0 auto;
 }
 
@@ -250,7 +250,8 @@ body, html {
 .damage-info { 
     /*position: relative;*/
     float:left;
-    width: 78em;
+    display: inline-block;
+    width: 64em;
 }
 
 .banner {

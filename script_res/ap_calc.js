@@ -405,8 +405,10 @@ $(".set-selector").change(function() {
         calcEvTotal(pokeObj);
         abilityObj.change();
         itemObj.change();
-        if (setName !== "Blank Set") document.getElementById("setName").value = pokemonName + ' (' + setName + ')';
-        else document.getElementById("setName").value = pokemonName;
+        if (pokeObj[0].id === "p2") {
+            if (setName !== "Blank Set" ) document.getElementById("setName").value = pokemonName + ' (' + setName + ')';
+            else document.getElementById("setName").value = pokemonName;
+        }
     }
 });
 
@@ -526,22 +528,12 @@ for (var i = 0; i < 4; i++) {
 }
 
 $("#atkdefswitch").change(function() {
-    var title = document.getElementById("p title");
-    var table_title = document.getElementById("damage-table-title");
-    if ($('#atkdefswitch').is(":checked")) {
-        title.textContent="Attacker";
-        table_title.textContent="Defenders";
-    }
-    else {
-        title.textContent="Defender";
-        table_title.textContent="Attackers";
-    }
     var table = $("#damage-table").DataTable();
     table.draw();
 });
 
 function addtotable() {
-    var poke = new Pokemon($("#p1"));
+    var poke = new Pokemon($("#p2"));
     var name = document.getElementById("setName").value;
     var nat = NATURES[poke.nature]
     var gen = document.querySelectorAll('input[name=gen]:checked')[0].value;
@@ -1150,13 +1142,13 @@ $(document).ready(function() {
                     "fnRowCallback": function(nRow, aData, iDisplayIndex, iDisplayIndexFull) {
                                         var pokes = $('#damage-table').DataTable().column(0).data().unique().toArray();
                                         var index = Array.prototype.indexOf.call(pokes,aData[0]);
-                                        if (index % 2 === 1) $('td', nRow).css("background-color", "#eaedf6");
-                                        else $('td', nRow).css("background-color", "#ffffff");
+                                        if (index % 2 === 1) $('td', nRow).css("background-color", $('#atkdefswitch').is(":checked")? "#ffe6e6" : "#e9e6ff");
+                                        else $('td', nRow).css("background-color", $('#atkdefswitch').is(":checked")? "#f2d5d5" : "#dad6f3");
     }});
     $("div.toolbar").html('<button type="button" onclick="cleartable()">Clear Table</button>');
     $('#damage-table').on('click', 'tr', function () {
         var data = table.row(this).data();
-        table.rows( function ( idx, aData, node ) {return aData[0] === data[0];} ).remove().draw();
+        table.rows( function ( idx, aData, node ) {return aData[1] === data[1];} ).remove().draw();
     });
     table.columns.adjust().draw();
     $("#gen9").prop("checked", true);
