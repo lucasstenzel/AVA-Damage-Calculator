@@ -3,7 +3,7 @@ body {
     font: 12px Verdana, sans-serif;
     background-color: #bbeedd;
     padding: 0 1em;
-    min-width: 120em;
+    min-width: 100em;
 }
 fieldset {
     float: left;
@@ -39,10 +39,6 @@ th {
     font-size: 0.8em;
 }
 .panel {
-    /*float: left;
-    display: inline-block;*/
-}
-.left-side {
     float: left;
     display: inline-block;
 }
@@ -51,28 +47,13 @@ th {
     width: 30em;
 }
 .field-info {
+    width: 90em;
+}
+.poke-list {
     width: 30em;
+    height: 60em;
+    overflow-y: auto;
 }
-.field-overlay {
-    position: relative;
-    top: 100px;
-}
-
-#damage-table {
-  /*border-collapse: collapse;*/
-  width:100%;
-  overflow-x: scroll;
-  height: 60em;
-  overflow-y: scroll;
-  display:block;
-  white-space:nowrap;
-  table-layout: fixed;
-}
-
-#damage-table th{
-    font-size: 13px;
-}
-
 .generations {
     padding-left: 1em;
 }
@@ -195,7 +176,6 @@ th {
 }
 
 /* pokemon info */
-
 .poke-info label {
     display: inline-block;
     width: 6em;
@@ -306,9 +286,9 @@ select.toxic-counter {
 .onoffswitch-checkbox {
     display: none;
 }
-.poke-info .onoffswitch-label {
+.onoffswitch-label {
     display: block; overflow: hidden; cursor: pointer;
-    border: 2px solid #999999; border-radius: 8px; width: auto;
+    border: 2px solid #999999; border-radius: 8px;
 }
 .onoffswitch-inner {
     display: block; width: 200%; margin-left: -100%;

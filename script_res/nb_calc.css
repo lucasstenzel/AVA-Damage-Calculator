@@ -201,7 +201,7 @@ body, html {
 
 .wrapper{
     padding:0 1em;
-    max-width:1138px;
+    max-width:1338px;
     margin:0 auto;
 }
 
@@ -226,11 +226,25 @@ body, html {
   border-top-left-radius: 2px;
 }
 
+.panel-footer {
+  background-color: #293131;
+  padding: 15px 15px;
+  border-top: 5px solid #de2808;
+  border-top-right-radius: 2px;
+  border-top-left-radius: 2px;
+}
+
 .panel-title {
   margin-top: 0;
   margin-bottom: 0;
   font-size: 15px;
   color: #fff;
+}
+
+.damage-info { 
+    /*position: relative;*/
+    float:left;
+    width: 78em;
 }
 
 .banner {
