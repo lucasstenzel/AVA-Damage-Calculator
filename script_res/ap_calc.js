@@ -622,6 +622,8 @@ function calculate() {
         minPercent = Math.floor(minDamage * 1000 / p2.maxHP) / 10;
         maxPercent = Math.floor(maxDamage * 1000 / p2.maxHP) / 10;
         damageText =  minPercent + " - " + maxPercent + "%";
+        if (minPercent >= 50) damageText = "<strong>"+damageText+"</strong>";
+        if (maxPercent >= 100) damageText = '<font color="#8d1515">'+damageText+"</font>";
         koChanceText = patk.moves[m_num].bp === 0 && patk.moves[m_num].category !== "Status"? '<a href="https://www.youtube.com/watch?v=NFZjEgXIl1E&t=21s">how</a>'
                   : getKOChanceText(result.damage, patk.moves[m_num], pdef, field.getSide(side), patk.ability === 'Bad Dreams');
         var d = this.data();
@@ -1134,7 +1136,14 @@ function getSelectOptions(arr, sort, defaultIdx) {
 }
 
 $(document).ready(function() {
-    var table = $('#damage-table').DataTable({'rowsGroup':[0,1], paging: false, searching: true, info:false, sDom: 'flrtip'});
+    var table = $('#damage-table').DataTable({'rowsGroup':[0,1], paging: false, searching: true, info:false, sDom: 'flrtip',
+    "fnRowCallback": function(nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+      var pokes = $('#damage-table').DataTable().column(0).data().unique().toArray();
+      var index = Array.prototype.indexOf.call(pokes,aData[0]);
+      console.log($('td',nRow));
+      if (index % 2 === 1) $('td', nRow).css("background-color", "#eaedf6");
+      else $('td', nRow).css("background-color", "#ffffff");
+    }});
     table.columns.adjust().draw();
     $("#gen9").prop("checked", true);
     $("#gen9").change();
