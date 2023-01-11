@@ -573,7 +573,8 @@ function addtotable() {
 
 $.fn.dataTable.ext.search.push(function(settings, data, dataIndex, rowData, counter) {
         var trNode = settings.aoData[dataIndex].nTr;
-        return $('#atkdefswitch').is(":checked") === (trNode.getAttribute('data-mode') === 'atk')
+        var null_damage = trNode.cells[3].innerHTML === '0 - 0%';
+        return ($('#atkdefswitch').is(":checked") === (trNode.getAttribute('data-mode') === 'atk')) && !null_damage;
 });
 
 function cleartable() {
