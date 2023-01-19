@@ -619,8 +619,8 @@ function calculate() {
         hits = patk.moves[m_num].hits;
         minDamage = result.damage[0] * hits;
         maxDamage = result.damage[result.damage.length-1] * hits;
-        minPercent = Math.floor(minDamage * 1000 / p2.maxHP) / 10;
-        maxPercent = Math.floor(maxDamage * 1000 / p2.maxHP) / 10;
+        minPercent = Math.floor(minDamage * 1000 / pdef.maxHP) / 10;
+        maxPercent = Math.floor(maxDamage * 1000 / pdef.maxHP) / 10;
         damageText =  minPercent + " - " + maxPercent + "%";
         if (minPercent >= 50) damageText = "<strong>"+damageText+"</strong>";
         if (maxPercent >= 100) damageText = '<font color="#8d1515">'+damageText+"</font>";
