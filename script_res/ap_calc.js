@@ -585,7 +585,7 @@ function cleartable() {
 
 var damageResults;
 function calculate() {
-    
+    console.log("calc");
     var p1 = new Pokemon($("#p1"));
     var field = new Field();
     var table = $("#damage-table").DataTable();
