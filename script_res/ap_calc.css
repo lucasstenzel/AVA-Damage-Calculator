@@ -94,7 +94,7 @@ th {
   /*border-collapse: collapse;*/
   width:100%;
   overflow-x: scroll;
-  height: 900px;
+  height: 54em;
   overflow-y: scroll;
   display:block;
   white-space:nowrap;

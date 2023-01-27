@@ -81,7 +81,7 @@
             <div class="poke-panels">
             <div class="panel poke-info" style="width:24%" id="p1">
                 <div class="panel-heading">
-                    <h4 class="panel-title">Your Pokémon</h4>
+                    <h4 class="panel-title" id="p1name">Your Pokémon</h4>
                 </div>
                 <div class="panel-body">
                     <input type="text" class="set-selector calc-trigger" />
@@ -215,13 +215,6 @@
                         <button type="button" onclick="savecalc1()">Save Calc Set</button>
                         <button type="button" onclick="exportset1()">Export Set</button>
                     </div>
-                     <p>Please enter your custom set here.</p>
-                    Spread Name: <input type="text" id="spreadName" style="width: 60%" value="My Custom Set">
-                    <br>
-                    <textarea rows="9" cols="36" id="customMon"></textarea>
-                    <br>
-                    <button type="button" onclick="savecustom()">Save</button> <button type="button" onclick="deletecustom()">Delete Custom Sets</button>
-                    <p>You may need to refresh the page after deleting your custom sets.  If you encounter a bug, please try deleting your cookies or reporting it!</p>
                 </div>
             
                         </div>
@@ -618,6 +611,17 @@
                     </div>
                     </div>
                 </div>
+                    <div style="display:flex;justify-content:center;">
+                    <div style="width:30%">
+                    <p>Please enter your custom set here.</p>
+                    Spread Name: <input type="text" id="spreadName" style="width: 30%;margin-left: auto;" value="My Custom Set">
+                    <br>
+                    <textarea rows="9" cols="36" id="customMon"></textarea>
+                    <br>
+                    <button type="button" onclick="savecustom()">Save</button> <button type="button" onclick="deletecustom()">Delete Custom Sets</button>
+                    <p>You may need to refresh the page after deleting your custom sets.  If you encounter a bug, please try deleting your cookies or reporting it!</p>
+                    </div>
+                    </div>
             </div>
 
 
