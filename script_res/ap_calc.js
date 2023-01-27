@@ -184,8 +184,23 @@ $(".ability").bind("keyup change", function () {
     else {
         $(this).closest(".poke-info").find(".abilityToggle").hide();
     }
+    var STAT_BOOST_VARY = ['Protosynthesis', 'Quark Drive'];
+    if (STAT_BOOST_VARY.indexOf(ab) !== -1) {
+        $(this).closest(".poke-info").find(".ability-advanced").show();
+        $(this).closest(".poke-info").find(".ability-advanced").prop("checked", false);
+    }
+    else
+        $(this).closest(".poke-info").find(".ability-advanced").hide();
 });
 
+
+$(".ability-advanced").bind("keyup change", function () {
+    if ($(this).prop("checked"))
+        $(this).closest(".poke-info").find(".ability-proto-quark").show();
+    else
+        $(this).closest(".poke-info").find(".ability-proto-quark").hide();
+    $(this).closest(".poke-info").find(".ability-proto-quark").val(0);
+});
 
 var lastTerrain = "noterrain";
 var lastManualWeather = "";
@@ -761,6 +776,7 @@ function Pokemon(pokeInfo) {
     this.ability = pokeInfo.find(".ability").val();
     this.abilityOn = pokeInfo.find(".abilityToggle").prop("checked");
     this.supremeOverlord = ~~pokeInfo.find(".ability-supreme").val();
+    this.highestStat = pokeInfo.find(".ability-advanced").prop("checked") ? ~~pokeInfo.find(".ability-proto-quark").val() : -1;
     this.item = pokeInfo.find(".item").val();
     this.status = pokeInfo.find(".status").val();
     this.toxicCounter = this.status === 'Badly Poisoned' ? ~~pokeInfo.find(".toxic-counter").val() : 0;
@@ -966,7 +982,7 @@ $(".gen").change(function () {
             items = ITEMS_SM;
             abilities = ABILITIES_SM;
             STATS = STATS_GSC;
-            calculateAllMoves = CALCULATE_ALL_MOVES_SS;
+            calculateAllMoves = CALCULATE_ALL_MOVES_SV;
             calcHP = CALC_HP_ADV;
             calcStat = CALC_STAT_ADV;
             break;
@@ -978,7 +994,7 @@ $(".gen").change(function () {
             items = (localStorage.getItem("dex") == "natdex") ? ITEMS_SS_NATDEX : ITEMS_SS;
             abilities = ABILITIES_SS;
             STATS = STATS_GSC;
-            calculateAllMoves = CALCULATE_ALL_MOVES_SS;
+            calculateAllMoves = CALCULATE_ALL_MOVES_SV;
             calcHP = CALC_HP_ADV;
             calcStat = CALC_STAT_ADV;
             break;
@@ -998,16 +1014,18 @@ $(".gen").change(function () {
     clearField();
     $(".gen-specific.g" + gen).show();
     $(".gen-specific").not(".g" + gen).hide();
-    if (gen >= 8 && localStorage.getItem("dex") == "natdex") {
-        for (i = 1; i <= 4; i++) {
-            $('label[for="zL' + i + '"]').show();
-            $('label[for="zR' + i + '"]').show();
+    if (gen >= 8) {
+        if (localStorage.getItem("dex") == "natdex") {
+            for (i = 1; i <= 4; i++) {
+                $('label[for="zL' + i + '"]').show();
+                $('label[for="zR' + i + '"]').show();
+            }
         }
-    }
-    else {
-        for (i = 1; i <= 4; i++) {
-            $('label[for="zL' + i + '"]').hide();
-            $('label[for="zR' + i + '"]').hide();
+        else {
+            for (i = 1; i <= 4; i++) {
+                $('label[for="zL' + i + '"]').hide();
+                $('label[for="zR' + i + '"]').hide();
+            }
         }
     }
     var typeOptions = getSelectOptions(Object.keys(typeChart));
