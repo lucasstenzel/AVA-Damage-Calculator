@@ -42,28 +42,59 @@ th {
     /*float: left;
     display: inline-block;*/
 }
-.left-side {
-    float: left;
-    display: inline-block;
-    width: 26.5%
+.poke-panels {
+    display: flex;
 }
 .poke-info {
     /*width: 33.1em;*/
-    width: 95%;
+    /*width: 95%;*/
 }
 .field-info {
-    width: 95%;
+    width: 94.5%;
 }
 .field-overlay {
-    position: relative;
-    top: 100px;
+    display: inline-flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.left {
+    float: left;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    max-height: 160px;
+    flex-grow: 1;
+}
+
+.field-middle {
+    flex-grow: 1;
+}
+.right {
+    float: right;
+    display: flex;
+    flex-wrap: wrap-reverse;
+    flex-direction: column;
+    max-height: 160px;
+    flex-grow: 1;
+}
+
+.field-overlay .left div {
+    margin-right: 10px;
+    margin-bottom: 4px;
+}
+
+.field-overlay .right div {
+    margin-left: auto;
+    margin-right: 10px;
+    margin-bottom: 4px;
 }
 
 #damage-table {
   /*border-collapse: collapse;*/
   width:100%;
   overflow-x: scroll;
-  height: 60em;
+  height: 54em;
   overflow-y: scroll;
   display:block;
   white-space:nowrap;
@@ -152,13 +183,6 @@ th {
     display: inline-block;
     width: 100%;
 }
-.left {
-    float: left;
-}
-.right {
-    float: right;
-}
-
 .locked-move:checked + .btn {
     background: #ffff99;
 }
@@ -290,8 +314,6 @@ select.toxic-counter {
 }
 
 
-
-
 #autolevel {
     float: right;
     color: #fff;
@@ -307,7 +329,7 @@ select.toxic-counter {
 .onoffswitch-checkbox {
     display: none;
 }
-.poke-info .onoffswitch-label {
+.field-info .onoffswitch-label {
     display: block; overflow: hidden; cursor: pointer;
     border: 2px solid #999999; border-radius: 8px; width: auto;
 }
@@ -345,6 +367,7 @@ select.toxic-counter {
 .onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-switch {
     right: 0px;
 }
+
 
 #changeatkdef {
     float: right;

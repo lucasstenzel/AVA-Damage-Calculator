@@ -6,12 +6,12 @@
 }
 
 body.dark, html.dark {
-    color: #d4d4d4;
+    color: #c8c8c8;
     background-color: #101010;
 }
 
 .dark .panel, .dark .panel-heading {
-    background-color: #192121;
+    background-color: #1a2424;
     border-bottom: 5px solid #103a52;
 }
 
@@ -228,10 +228,10 @@ body, html {
 
 .panel-footer {
   background-color: #293131;
-  padding: 15px 15px;
+  padding: 10px 15px;
   /*border-top: 5px solid #de2808;*/
-  border-top-right-radius: 2px;
-  border-top-left-radius: 2px;
+  border-bottom-right-radius: 2px;
+  border-bottom-left-radius: 2px;
 }
 
 .toolbar {

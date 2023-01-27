@@ -35,7 +35,8 @@ $(function(){
 			loadTheme("light");
 			localStorage.setItem("theme", "light");
 		}
-		//loadSVColors(this.value);	//
+		loadSVColors(this.value);	//
+                $("#damage-table").DataTable().draw();
 	});
 
 	$("#switchDex").on("click", function () {

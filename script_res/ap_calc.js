@@ -406,8 +406,8 @@ $(".set-selector").change(function() {
         abilityObj.change();
         itemObj.change();
         if (pokeObj[0].id === "p2") {
-            if (setName !== "Blank Set" ) document.getElementById("setName").value = pokemonName + ' (' + setName + ')';
-            else document.getElementById("setName").value = pokemonName;
+            if (setName !== "Blank Set" ) document.getElementById("setName").value = setName;
+            else document.getElementById("setName").value = "";
         }
     }
 });
@@ -534,7 +534,10 @@ $("#atkdefswitch").change(function() {
 
 function addtotable() {
     var poke = new Pokemon($("#p2"));
-    var name = document.getElementById("setName").value;
+    console.log(poke);
+    var name;
+    if (document.getElementById("setName").value !== "") name = poke.name + " (" + document.getElementById("setName").value + ")";
+    else name = poke.name;
     var nat = NATURES[poke.nature]
     var gen = document.querySelectorAll('input[name=gen]:checked')[0].value;
     var spread = poke.maxHP.toString().padStart(3,' ');
@@ -623,7 +626,7 @@ function calculate() {
         maxPercent = Math.floor(maxDamage * 1000 / pdef.maxHP) / 10;
         damageText =  minPercent + " - " + maxPercent + "%";
         if (minPercent >= 50) damageText = "<strong>"+damageText+"</strong>";
-        if (maxPercent >= 100) damageText = '<font color="#8d1515">'+damageText+"</font>";
+        if (maxPercent >= 100) damageText = '<font color="#d51013">'+damageText+"</font>";
         koChanceText = patk.moves[m_num].bp === 0 && patk.moves[m_num].category !== "Status"? '<a href="https://www.youtube.com/watch?v=NFZjEgXIl1E&t=21s">how</a>'
                   : getKOChanceText(result.damage, patk.moves[m_num], pdef, field.getSide(side), patk.ability === 'Bad Dreams');
         var d = this.data();
@@ -878,7 +881,7 @@ var gen, pokedex, setdex, typeChart, moves, abilities, items, STATS, calculateAl
 $(".gen").change(function () {
     gen = ~~$(this).val();
 
-    //loadSVColors(document.getElementById('switchTheme').value);     //
+    loadSVColors(document.getElementById('switchTheme').value);     //
     var table = $("#damage-table").DataTable();
     table.clear();
     table.draw();
@@ -1142,13 +1145,28 @@ $(document).ready(function() {
                     "fnRowCallback": function(nRow, aData, iDisplayIndex, iDisplayIndexFull) {
                                         var pokes = $('#damage-table').DataTable().column(0).data().unique().toArray();
                                         var index = Array.prototype.indexOf.call(pokes,aData[0]);
-                                        if (index % 2 === 1) $('td', nRow).css("background-color", $('#atkdefswitch').is(":checked")? "#ffe6e6" : "#e9e6ff");
-                                        else $('td', nRow).css("background-color", $('#atkdefswitch').is(":checked")? "#f2d5d5" : "#dad6f3");
+                                        var color;
+                                        if (index % 2 === 0) {
+                                            if ($('#atkdefswitch').is(":checked")){
+                                                 color = ($('#switchTheme').val()==="dark")? "#ffe6e6": "#361b1b"; //Lighter red
+                                            } else{
+                                                 color = ($('#switchTheme').val()==="dark")? "#e9e6ff": "#1b1b36"; //Lighter blue
+                                            }
+                                        }
+                                        else {
+                                            if ($('#atkdefswitch').is(":checked")){
+                                                 color = ($('#switchTheme').val()==="dark")? "#f2d5d5": "#211111"; //Darker red
+                                            } else{
+                                                 color = ($('#switchTheme').val()==="dark")? "#dad6f3": "#111221"; //Darker blue
+                                            }
+                                        }
+                                        $('td', nRow).css("background-color", color);
+
     }});
     $("div.toolbar").html('<button type="button" onclick="cleartable()">Clear Table</button>');
     $('#damage-table').on('click', 'tr', function () {
         var data = table.row(this).data();
-        table.rows( function ( idx, aData, node ) {return aData[1] === data[1];} ).remove().draw();
+        table.rows( function ( idx, aData, node ) {return aData[0] === data[0] && aData[1] === data[1];} ).remove().draw();
     });
     table.columns.adjust().draw();
     $("#gen9").prop("checked", true);
