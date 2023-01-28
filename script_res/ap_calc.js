@@ -427,6 +427,21 @@ $(".set-selector").change(function() {
     }
 });
 
+//Changes Item to Coordinate with forme
+$('.forme').change(function(){
+    //Check for form-item coordination
+    var pokeInfo = $(this).closest('.poke-info');
+    var setName = pokeInfo.find("input.set-selector").val();
+    var pokemonName;
+    var lockItemCheck = LOCK_ITEM_LOOKUP[$(this).val()];
+    console.log(lockItemCheck);
+    if (lockItemCheck === "Griseous Orb" && gen >= 9)       //look how they massacred my boy
+        //    lockItemCheck = "Griseous Core";              //they should've buffed origin giratina not nerf it
+        lockItemCheck = LOCK_ITEM_LOOKUP[''];               //cmon game freak make it a key item before the home update
+    if (lockItemCheck !== undefined) {
+        pokeInfo.find(".item").val(lockItemCheck);
+    }
+});
 
 function showFormes(formeObj, setName, pokemonName, pokemon) {
     var defaultForme = 0;
@@ -723,27 +738,12 @@ function findDamageResult(resultMoveObj) {
 
 function Pokemon(pokeInfo) {
     var setName = pokeInfo.find("input.set-selector").val();
-
     if (setName.indexOf("(") === -1) {
         this.name = setName;
     } else {
         var pokemonName = setName.substring(0, setName.indexOf(" ("));
         this.name = (pokedex[pokemonName].formes) ? pokeInfo.find(".forme").val() : pokemonName;
-    }
-
-    //Check for form-item coordination
-    var lockItemCheck = LOCK_ITEM_LOOKUP[this.name];
-    if (lockItemCheck === "Griseous Orb" && gen >= 9)       //look how they massacred my boy
-        //    lockItemCheck = "Griseous Core";              //they should've buffed origin giratina not nerf it
-        lockItemCheck = LOCK_ITEM_LOOKUP[''];               //cmon game freak make it a key item before the home update
-    if (lockItemCheck !== undefined) {
-        if (this.name && pokemonName && (this.name.includes(pokemonName) || this.name === "Ultra Necrozma"))    //if this if statement isn't here then sets won't change items from locked items properly
-            pokeInfo.find(".item").val(lockItemCheck);
-        //pokeInfo.find(".item").prop("disabled", true);
-    }
-    else {
-        pokeInfo.find(".item").prop("disabled", false);
-    }
+    } 
 
     //Check for ability to Dynamax
     if (["Zacian", "Zacian-Crowned", "Zamazenta", "Zamazenta-Crowned", "Eternatus"].indexOf(this.name) !== -1) {
