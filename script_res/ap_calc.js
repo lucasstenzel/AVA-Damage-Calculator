@@ -739,7 +739,7 @@ function Pokemon(pokeInfo) {
     if (lockItemCheck !== undefined) {
         if (this.name && pokemonName && (this.name.includes(pokemonName) || this.name === "Ultra Necrozma"))    //if this if statement isn't here then sets won't change items from locked items properly
             pokeInfo.find(".item").val(lockItemCheck);
-        pokeInfo.find(".item").prop("disabled", true);
+        //pokeInfo.find(".item").prop("disabled", true);
     }
     else {
         pokeInfo.find(".item").prop("disabled", false);
