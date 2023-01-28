@@ -1158,7 +1158,8 @@ function getSelectOptions(arr, sort, defaultIdx) {
 $(document).ready(function() {
     var table = $('#damage-table').DataTable({
                     'rowsGroup':[0,1], 
-                    paging: false, searching: true, info:false,dom: '<"toolbar">frtip',
+                    paging: false, searching: true, info:false,dom: 'Bfrtip', buttons: ['copy', 'csv', 'excel'],
+                    //'columnDefs': [{'width': '20em', 'targets': 0}],
                     "fnRowCallback": function(nRow, aData, iDisplayIndex, iDisplayIndexFull) {
                                         var pokes = $('#damage-table').DataTable().column(0).data().unique().toArray();
                                         var index = Array.prototype.indexOf.call(pokes,aData[0]);
@@ -1167,20 +1168,19 @@ $(document).ready(function() {
                                             if ($('#atkdefswitch').is(":checked")){
                                                  color = ($('#switchTheme').val()==="dark")? "#ffe6e6": "#361b1b"; //Lighter red
                                             } else{
-                                                 color = ($('#switchTheme').val()==="dark")? "#e9e6ff": "#1b1b36"; //Lighter blue
+                                                 color = ($('#switchTheme').val()==="dark")? "#e9e6ff": "#202049"; //Lighter blue
                                             }
                                         }
                                         else {
                                             if ($('#atkdefswitch').is(":checked")){
                                                  color = ($('#switchTheme').val()==="dark")? "#f2d5d5": "#211111"; //Darker red
                                             } else{
-                                                 color = ($('#switchTheme').val()==="dark")? "#dad6f3": "#111221"; //Darker blue
+                                                 color = ($('#switchTheme').val()==="dark")? "#dad6f3": "#131330"; //Darker blue
                                             }
                                         }
                                         $('td', nRow).css("background-color", color);
 
     }});
-    $("div.toolbar").html('<button type="button" onclick="cleartable()">Clear Table</button>');
     $('#damage-table').on('click', 'tr', function () {
         var data = table.row(this).data();
         table.rows( function ( idx, aData, node ) {return aData[0] === data[0] && aData[1] === data[1];} ).remove().draw();

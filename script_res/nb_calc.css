@@ -6,8 +6,23 @@
 }
 
 body.dark, html.dark {
-    color: #c8c8c8;
+    color: #fff;
     background-color: #101010;
+}
+
+.dark .dt-button {
+    color: #fff;
+}
+
+.light .dt-button {
+    background-color: #fff;
+}
+
+body.dark a:link {
+}
+
+/* visited link */
+body.dark a:visited {
 }
 
 .dark .panel, .dark .panel-heading {
@@ -232,12 +247,14 @@ body, html {
   /*border-top: 5px solid #de2808;*/
   border-bottom-right-radius: 2px;
   border-bottom-left-radius: 2px;
+  width: 95.6%;
 }
 
 .toolbar {
   float:left;
-  margin-top: 3px;
+  margin-top: 0px;
   margin-left: 15px;
+  margin-right: 3px;
 }
 
 .panel-title {

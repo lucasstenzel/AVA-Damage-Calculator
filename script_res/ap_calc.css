@@ -94,12 +94,22 @@ th {
   /*border-collapse: collapse;*/
   width:100%;
   overflow-x: scroll;
-  height: 54em;
+  height: 45em;
   overflow-y: scroll;
   display:block;
   white-space:nowrap;
-  table-layout: fixed;
+  font-size: 13.4px;
 }
+
+table.dataTable thead th:nth-child(1),
+table.dataTable tbody td:nth-child(1) {
+  width: 10em;
+  max-width: 10em;
+  min-width: 10em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}  
 
 #damage-table th{
     font-size: 13px;
