@@ -434,7 +434,6 @@ $('.forme').change(function(){
     var setName = pokeInfo.find("input.set-selector").val();
     var pokemonName;
     var lockItemCheck = LOCK_ITEM_LOOKUP[$(this).val()];
-    console.log(lockItemCheck);
     if (lockItemCheck === "Griseous Orb" && gen >= 9)       //look how they massacred my boy
         //    lockItemCheck = "Griseous Core";              //they should've buffed origin giratina not nerf it
         lockItemCheck = LOCK_ITEM_LOOKUP[''];               //cmon game freak make it a key item before the home update
@@ -564,14 +563,14 @@ $("#atkdefswitch").change(function() {
 
 function addtotable() {
     var poke = new Pokemon($("#p2"));
-    console.log(poke);
     var name;
     if (document.getElementById("setName").value !== "") name = poke.name + " (" + document.getElementById("setName").value + ")";
     else name = poke.name;
-    var nat = NATURES[poke.nature]
+    var nature = NATURES[poke.nature]
     var gen = document.querySelectorAll('input[name=gen]:checked')[0].value;
-    var spread = poke.maxHP.toString().padStart(3,' ');
+    //var spread = poke.maxHP.toString().padStart(3,' ');
     var stats = poke.rawStats;
+    /*
     for(var stat in stats){
         if(nat[0] === stat) spread += '/<font color="red">' + stats[stat] + '</font>';
         else if (nat[1] === stat) spread += '/<font color="#2b8afd">' + stats[stat] + '</font>';
@@ -583,19 +582,29 @@ function addtotable() {
         for(var stat in stats){
             ev_spread += '/'+stats[stat].toString().padStart(poke.rawStats[stat].toString().length,' ');
         }
-        spread = '<p style="text-align: center;white-space: pre;font-family:Courier;">'+spread+"<br>"+ev_spread+"</p>"
+        spread = '<p style="text-align: center;white-space: pre;font-family:Courier; font-size:12px;">'+spread+"<br>"+ev_spread+"</p>"
+    }*/
+    if (gen > 2){
+        var ev_spread = poke.HPEVs;
+        stats = poke.evs;
+        for(var stat in stats){
+            if(nature[0] === stat) ev_spread += '/<font color="red">' + stats[stat] + '+</font>';
+            else if (nature[1] === stat) ev_spread += '/<font color="#2b8afd">' + stats[stat] + '-</font>';
+            else ev_spread += '/'+stats[stat];
+        }
+        name = '<p style="text-align: center;white-space: pre;">'+name+"<br>"+ev_spread+"</p>"
     }
     var table = $("#damage-table").DataTable();
     for(var move in poke.moves) {
         if(poke.moves[move].category !== "Status" && poke.moves[move].name !== "(No Move)"){
-            var row = table.row.add([name, spread, poke.moves[move].name, "",""]).node();
+            var row = table.row.add([name, poke.moves[move].name, "",""]).node();
             $(row).attr("data-move", move);
             $(row).attr("data-mode", "def");
             $(row).attr("data-pokemon", JSON.stringify(poke));
         }
     }
     for(var i = 0; i < 4; i++) {
-        var row = table.row.add([name, spread, "", "",""]).node();
+        var row = table.row.add([name, "", "",""]).node();
         $(row).attr("data-move", i);
         $(row).attr("data-mode", "atk");
         $(row).attr("data-pokemon", JSON.stringify(poke));
@@ -606,7 +615,7 @@ function addtotable() {
 
 $.fn.dataTable.ext.search.push(function(settings, data, dataIndex, rowData, counter) {
         var trNode = settings.aoData[dataIndex].nTr;
-        var null_damage = trNode.cells[3].innerHTML === '0 - 0%';
+        var null_damage = trNode.cells[2].innerHTML === '0 - 0%';
         return ($('#atkdefswitch').is(":checked") === (trNode.getAttribute('data-mode') === 'atk')) && !null_damage;
 });
 
@@ -618,18 +627,18 @@ function cleartable() {
 
 var damageResults;
 function calculate() {
-    var p1 = new Pokemon($("#p1"));
     var field = new Field();
     var table = $("#damage-table").DataTable();
     var cache = {};
     var result, hits, minDamage, maxDamage, minPercent, maxPercent, damageText, koChanceText;
     table.rows().every(function (rowIdx, tableLoop, rowLoop) {
+        var p1 = new Pokemon($("#p1"));
         var row = this.node();
         var pstr = $(row).attr('data-pokemon');
         var p2 = JSON.parse(pstr);
         if(pstr in cache) damageResults = cache[pstr];
         else {
-            damageResults = calculateAllMoves(p1, p2, field);
+            damageResults = calculateAllMoves(p1, p2, field); 
             cache[pstr] = damageResults;
         }
 
@@ -659,9 +668,9 @@ function calculate() {
         koChanceText = patk.moves[m_num].bp === 0 && patk.moves[m_num].category !== "Status"? '<a href="https://www.youtube.com/watch?v=NFZjEgXIl1E&t=21s">how</a>'
                   : getKOChanceText(result.damage, patk.moves[m_num], pdef, field.getSide(side), patk.ability === 'Bad Dreams');
         var d = this.data();
-        d[2] = patk.moves[m_num].name;
-        d[3] = damageText;
-        d[4] = koChanceText;
+        d[1] = patk.moves[m_num].name;
+        d[2] = damageText;
+        d[3] = koChanceText;
         this.data(d);
     });
     table.draw(); 
@@ -1157,7 +1166,7 @@ function getSelectOptions(arr, sort, defaultIdx) {
 
 $(document).ready(function() {
     var table = $('#damage-table').DataTable({
-                    'rowsGroup':[0,1], 
+                    'rowsGroup':[0], 
                     paging: false, searching: true, info:false,dom: 'Bfrtip', buttons: ['copy', 'csv', 'excel'],
                     //'columnDefs': [{'width': '20em', 'targets': 0}],
                     "fnRowCallback": function(nRow, aData, iDisplayIndex, iDisplayIndexFull) {
@@ -1182,8 +1191,8 @@ $(document).ready(function() {
 
     }});
     $('#damage-table').on('click', 'tr', function () {
-        var data = table.row(this).data();
-        table.rows( function ( idx, aData, node ) {return aData[0] === data[0] && aData[1] === data[1];} ).remove().draw();
+        var data = table.row(this).data();
+        if (data) table.rows( function ( idx, aData, node ) {return aData[0] === data[0];} ).remove().draw();
     });
     table.columns.adjust().draw();
     $("#gen9").prop("checked", true);
