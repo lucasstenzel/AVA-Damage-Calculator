@@ -564,26 +564,10 @@ $("#atkdefswitch").change(function() {
 function addtotable() {
     var poke = new Pokemon($("#p2"));
     var name;
-    if (document.getElementById("setName").value !== "") name = poke.name + " (" + document.getElementById("setName").value + ")";
-    else name = poke.name;
     var nature = NATURES[poke.nature]
     var gen = document.querySelectorAll('input[name=gen]:checked')[0].value;
-    //var spread = poke.maxHP.toString().padStart(3,' ');
     var stats = poke.rawStats;
-    /*
-    for(var stat in stats){
-        if(nat[0] === stat) spread += '/<font color="red">' + stats[stat] + '</font>';
-        else if (nat[1] === stat) spread += '/<font color="#2b8afd">' + stats[stat] + '</font>';
-        else spread += '/'+stats[stat];
-    }
-    if (gen > 2){
-        var ev_spread = poke.HPEVs;
-        stats = poke.evs;
-        for(var stat in stats){
-            ev_spread += '/'+stats[stat].toString().padStart(poke.rawStats[stat].toString().length,' ');
-        }
-        spread = '<p style="text-align: center;white-space: pre;font-family:Courier; font-size:12px;">'+spread+"<br>"+ev_spread+"</p>"
-    }*/
+    
     if (gen > 2){
         var ev_spread = poke.HPEVs;
         stats = poke.evs;
@@ -592,8 +576,10 @@ function addtotable() {
             else if (nature[1] === stat) ev_spread += '/<font color="#2b8afd">' + stats[stat] + '-</font>';
             else ev_spread += '/'+stats[stat];
         }
-        name = '<p style="text-align: center;white-space: pre;">'+name+"<br>"+ev_spread+"</p>"
+        if (document.getElementById("setName").value !== "") name =  '<p style="text-align: center;white-space: pre;">'+poke.name+"<br>"+document.getElementById("setName").value+"<br>"+ev_spread+"</p>";
+        else name = '<p style="text-align: center;white-space: pre;">'+poke.name+"<br>"+ev_spread+"</p>";
     }
+    
     var table = $("#damage-table").DataTable();
     for(var move in poke.moves) {
         if(poke.moves[move].category !== "Status" && poke.moves[move].name !== "(No Move)"){
