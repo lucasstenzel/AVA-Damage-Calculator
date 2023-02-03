@@ -611,12 +611,11 @@ function cleartable() {
     table.draw();
 }
 
-var damageResults;
 function calculate() {
     var field = new Field();
     var table = $("#damage-table").DataTable();
     var cache = {};
-    var result, hits, minDamage, maxDamage, minPercent, maxPercent, damageText, koChanceText;
+    var damageResults, result, hits, minDamage, maxDamage, minPercent, maxPercent, damageText, koChanceText;
     table.rows().every(function (rowIdx, tableLoop, rowLoop) {
         var p1 = new Pokemon($("#p1"));
         var row = this.node();
@@ -1152,7 +1151,7 @@ function getSelectOptions(arr, sort, defaultIdx) {
 
 $(document).ready(function() {
     var table = $('#damage-table').DataTable({
-                    'rowsGroup':[0], 
+                    'rowsGroup':[0,1], //there is no reason to have column 1 in rowsGroup, but it stops a bug where the table swaps row order after every draw update 
                     paging: false, searching: true, info:false,dom: 'Bfrtip', buttons: ['copy', 'csv', 'excel'],
                     //'columnDefs': [{'width': '20em', 'targets': 0}],
                     "fnRowCallback": function(nRow, aData, iDisplayIndex, iDisplayIndexFull) {
