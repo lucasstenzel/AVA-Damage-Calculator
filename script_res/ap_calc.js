@@ -612,15 +612,19 @@ function cleartable() {
 }
 
 function calculate() {
+    console.log("hello");
     var field = new Field();
+    var p1 = new Pokemon($("#p1"));
+    var p2 = new Pokemon($("#p2"));
+    calculateAllMoves(p1, p2, field); 
     var table = $("#damage-table").DataTable();
     var cache = {};
     var damageResults, result, hits, minDamage, maxDamage, minPercent, maxPercent, damageText, koChanceText;
     table.rows().every(function (rowIdx, tableLoop, rowLoop) {
-        var p1 = new Pokemon($("#p1"));
+        p1 = new Pokemon($("#p1"));
         var row = this.node();
         var pstr = $(row).attr('data-pokemon');
-        var p2 = JSON.parse(pstr);
+        p2 = JSON.parse(pstr);
         if(pstr in cache) damageResults = cache[pstr];
         else {
             damageResults = calculateAllMoves(p1, p2, field); 
