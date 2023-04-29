@@ -162,7 +162,7 @@ var manualProtoQuark;
 $(".ability").bind("keyup change", function () {
 
     $(this).closest(".poke-info").find(".move-hits").val($(this).val() === 'Skill Link' ? 5
-        : $(this).closest(".poke-info").find(".item").val() === 'Loaded Dice' ? 4
+        : $(this).closest(".poke-info").find("select.item").val() === 'Loaded Dice' ? 4
             : 3);
 
     if ($(this).val() === "Supreme Overlord")
@@ -173,7 +173,7 @@ $(".ability").bind("keyup change", function () {
 
     var ab = $(this).val();
     var ABILITY_TOGGLE_OFF = ['Flash Fire', 'Plus', 'Minus', 'Trace', 'Stakeout', 'Electromorphosis', 'Wind Power', 'Sand Spit', 'Seed Sower'];
-    var ABILITY_TOGGLE_ON = gen === 9 ? ['Intimidate', 'Slow Start', 'Protean', 'Libero'] : ['Intimidate', 'Slow Start'];
+    var ABILITY_TOGGLE_ON = gen === 9 ? ['Intimidate', 'Slow Start', 'Protean', 'Libero', 'Intrepid Sword', 'Dauntless Shield'] : ['Intimidate', 'Slow Start'];
     if (ABILITY_TOGGLE_OFF.indexOf(ab) !== -1) {
         $(this).closest(".poke-info").find(".abilityToggle").show();
         $(this).closest(".poke-info").find(".abilityToggle").prop("checked", false);
@@ -196,7 +196,6 @@ $(".ability").bind("keyup change", function () {
     manualProtoQuark = false;
 });
 
-
 var lastHighestStat = [0,0];
 $(".ability-advanced").bind("keyup change", function () {
     if ($(this).prop("checked")) {
@@ -215,7 +214,7 @@ var lastTerrain = "noterrain";
 var lastManualWeather = "";
 var lastAutoWeather = ["", ""];
 function autoSetType(p, item) {
-    var ab = $(p + " .ability").val();
+    var ab = $(p + " select.ability").val();
     
     if (ab == "RKS System") {
         if (item.indexOf("Memory") != -1) {
@@ -305,8 +304,8 @@ $(".move-selector").change(function() {
 
     if (move.isMultiHit) {
         moveGroupObj.children(".move-hits").show();
-        moveGroupObj.children(".move-hits").val($(this).closest(".poke-info").find(".ability").val() === 'Skill Link' ? 5
-            : $(this).closest(".poke-info").find(".item").val() === 'Loaded Dice' ? 4
+        moveGroupObj.children(".move-hits").val($(this).closest(".poke-info").find("select.ability").val() === 'Skill Link' ? 5
+            : $(this).closest(".poke-info").find("select.item").val() === 'Loaded Dice' ? 4
             : 3);
     } else {
         moveGroupObj.children(".move-hits").hide();
@@ -370,14 +369,13 @@ $(".set-selector").change(function() {
             pokeObj.find("." + STATS[i] + " .base").val(pokemon.bs[STATS[i]]);
         }
         pokeObj.find(".weight").val(pokemon.w);
-        //pokeObj.find(".canEvolve").val(pokemon.canEvolve);
         pokeObj.find(".boost").val(0);
         pokeObj.find(".percent-hp").val(100);
         pokeObj.find(".status").val("Healthy");
         $(".status").change();
         var moveObj;
-        var abilityObj = pokeObj.find(".ability");
-        var itemObj = pokeObj.find(".item");
+        var abilityObj = pokeObj.find("select.ability");
+        var itemObj = pokeObj.find("select.item");
         if (pokemonName in setdex && setName in setdex[pokemonName]) {
             var set = setdex[pokemonName][setName];
             if (setdexCustom !== [] && pokemonName in setdexCustom && setName in setdexCustom[pokemonName])
@@ -516,6 +514,7 @@ $(".forme").change(function() {
         container.find(".ability").val("");
     }
     container.find(".ability").keyup();
+    container.find(".ability").trigger("change.select2");
 
     if (pokemonName === "Darmanitan") {
         container.find(".percent-hp").val($(this).val() === "Darmanitan-Zen" ? "50" : "100").keyup();
@@ -560,7 +559,7 @@ function getTerrainEffects() {
 
 function isGrounded(pokeInfo) {
     return $("#gravity").prop("checked") || (pokeInfo.find(".type1").val() !== "Flying" && pokeInfo.find(".type2").val() !== "Flying" &&
-            pokeInfo.find(".ability").val() !== "Levitate" && pokeInfo.find(".item").val() !== "Air Balloon");
+            pokeInfo.find("select.ability").val() !== "Levitate" && pokeInfo.find("select.item").val() !== "Air Balloon");
 }
 
 var resultLocations = [[],[]];
@@ -631,7 +630,6 @@ function cleartable() {
 }
 
 function calculate() {
-    console.log("hello");
     var field = new Field();
     var p1 = new Pokemon($("#p1"));
     var p2 = new Pokemon($("#p2"));
@@ -790,11 +788,11 @@ function Pokemon(pokeInfo) {
         this.evs[STATS[i]] = ~~pokeInfo.find("." + STATS[i] + " .evs").val();
     }
     this.nature = pokeInfo.find(".nature").val();
-    this.ability = pokeInfo.find(".ability").val();
+    this.ability = pokeInfo.find("select.ability").val();
     this.abilityOn = pokeInfo.find(".abilityToggle").prop("checked");
     this.supremeOverlord = ~~pokeInfo.find(".ability-supreme").val();
     this.highestStat = pokeInfo.find(".ability-advanced").prop("checked") ? ~~pokeInfo.find(".ability-proto-quark").val() : -1;
-    this.item = pokeInfo.find(".item").val();
+    this.item = pokeInfo.find("select.item").val();
     this.status = pokeInfo.find(".status").val();
     this.toxicCounter = this.status === 'Badly Poisoned' ? ~~pokeInfo.find(".toxic-counter").val() : 0;
     this.moves = [
@@ -1250,6 +1248,21 @@ $(document).ready(function() {
         dropdownAutoWidth:true,
         matcher: function(term, text) {
             // 2nd condition is for Hidden Power
+            return text.toUpperCase().indexOf(term.toUpperCase()) === 0 || text.toUpperCase().indexOf(" " + term.toUpperCase()) >= 0;
+        }
+    });
+    //SELECT2 CODE NEEDS TO BE CHANGED SO IT UPDATES WHEN CHANGED
+    $(".ability").select2({
+        dropdownAutoWidth: true,
+        matcher: function (term, text) {
+            // 2nd condition is just in case
+            return text.toUpperCase().indexOf(term.toUpperCase()) === 0 || text.toUpperCase().indexOf(" " + term.toUpperCase()) >= 0;
+        }
+    });
+    $(".item").select2({
+        dropdownAutoWidth: true,
+        matcher: function (term, text) {
+            // 2nd condition is for shorthands like Choice items
             return text.toUpperCase().indexOf(term.toUpperCase()) === 0 || text.toUpperCase().indexOf(" " + term.toUpperCase()) >= 0;
         }
     });
