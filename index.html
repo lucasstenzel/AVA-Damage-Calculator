@@ -84,7 +84,7 @@
                 <div class="panel-heading">
                     <h4 class="panel-title" id="p1name">Your Pokémon</h4>
                 </div>
-                <div class="panel-body">
+               <div class="panel-body">
                     <input type="text" class="set-selector calc-trigger" />
                     <div class="info-group">
                         <div>
@@ -211,7 +211,7 @@
                         <select class="move-10hits calc-trigger hide"><option value="1">1 hit</option><option value="2">2 hits</option><option value="3">3 hits</option><option value="4">4 hits</option><option value="5">5 hits</option><option value="6">6 hits</option><option value="7">7 hits</option><option value="8">8 hits</option><option value="9">9 hits</option><option value="10">10 hits</option></select>
                         <select class="move-lastRespRageFist calc-trigger hide"><option value="0">0x effect</option><option value="1">1x effect</option><option value="2">2x effect</option><option value="3">3x effect</option><option value="4">4x effect</option><option value="5">5x effect</option><option value="6">6x effect</option></select>
                     </div>
-                    <!--<input class="glaive-rush calc-trigger hide" type="checkbox" id="glaiveL" title="Apply double damage from using Glaive Rush?" />-->
+                    <input class="glaive-rush calc-trigger hide" type="checkbox" id="glaiveL" title="Apply double damage from using Glaive Rush?" />
                     <div class="info-group">
                         <input type="text" class="setCalc" id="setName1" style="width: 40%" value="My Calc Set">
                         <button type="button" onclick="savecalc1()">Save Calc Set</button>
@@ -245,6 +245,7 @@
                                 <th>Move</th>
                                 <th>Damage (%)</th>
                                 <th>KO Chance</th>
+                                <th></th>
                                 </tr></thead>
                     <tbody></tbody>
                 </table>
@@ -636,7 +637,8 @@
 
     <script src="jquery-3.1.1.min.js"></script>
     <link rel="stylesheet" type="text/css" href="DataTables/datatables.css">
-    <<link rel="stylesheet" type="text/css" href="DataTables/buttons.dataTables.min.css">
+    <link rel="stylesheet" type="text/css" href="DataTables/buttons.dataTables.min.css">
+    <script type="text/javascript" charset="utf8" src="DataTables/dataTables.editor.min.js"></script>
     <script type="text/javascript" charset="utf8" src="DataTables/datatables.js"></script>
     <script type="text/javascript" charset="utf8" src="DataTables/datatables.buttons.min.js"></script>
     <script type="text/javascript" charset="utf8" src="DataTables/buttons.html5.min.js"></script>

@@ -292,6 +292,22 @@ $(".status").bind("keyup change", function() {
     }
 });
 
+//sloppy check for Glaive Rush checkbox
+function glaiveRushCheck(divValue) {    //divValue should accept any div class, it's just meant to be a quick way to find which Pokemon it's checking
+    pInfo = $(divValue).closest(".poke-info");
+    pMoves = [pInfo.find(".move1").children("select.move-selector").val(),
+        pInfo.find(".move2").children("select.move-selector").val(),
+        pInfo.find(".move3").children("select.move-selector").val(),
+        pInfo.find(".move4").children("select.move-selector").val()];
+
+    if (pMoves.indexOf("Glaive Rush") != -1)
+        pInfo.find(".glaive-rush").show();
+    else {
+        pInfo.find(".glaive-rush").hide();
+        pInfo.find(".glaive-rush").prop("checked", false);
+    }
+}
+
 // auto-update move details on select
 $(".move-selector").change(function() {
     var moveName = $(this).val();
@@ -341,13 +357,8 @@ $(".move-selector").change(function() {
 
     moveGroupObj.children(".move-z").prop("checked", false);
 
-    //CHANGE HOW THIS WORKS, IT DOESN'T APPEAR FOR SETS AND DISAPPEAR PROPERLY
-    if (moveName == "Glaive Rush")
-        $(this).closest(".poke-info").find(".glaive-rush").show();
-    else {
-        $(this).closest(".poke-info").find(".glaive-rush").hide();
-        $(this).closest(".poke-info").find(".glaive-rush").prop("checked", false);
-    }
+    //SLOPPY WAY OF HANDLING
+    glaiveRushCheck(moveGroupObj);
 });
 
 // auto-update set details on select
@@ -461,6 +472,9 @@ $('.forme').change(function(){
 
 function showFormes(formeObj, setName, pokemonName, pokemon) {
     var defaultForme = 0;
+    var gmaxDefaults = ['Venusaur', 'Charizard', 'Blastoise', 'Butterfree', 'Pikachu', 'Meowth', 'Gengar', 'Kingler', 'Lapras', 'Eevee', 'Snorlax', 'Garbodor',
+        'Rillaboom', 'Cinderace', 'Inteleon', 'Orbeetle', 'Coalossal', 'Flapple', 'Sandaconda', 'Toxtricity', 'Centiskorch', 'Hatterene', 'Grimmsnarl',
+        'Alcremie', 'Copperajah', 'Urshifu-Single Strike', 'Urshifu-Rapid Strike'];
 
     if (setName !== 'Blank Set') {
         var set = setdex[pokemonName][setName];
@@ -478,6 +492,11 @@ function showFormes(formeObj, setName, pokemonName, pokemon) {
             }
         }
     }
+
+    if (pokemonName === "Palafin")
+        defaultForme = 1;
+    else if (gen == 8 && !defaultForme && gmaxDefaults.indexOf(pokemonName) != -1)
+        defaultForme = pokedex[pokemonName].formes.indexOf(pokemonName + "-Gmax");
 
     var formeOptions = getSelectOptions(pokemon.formes, false, defaultForme);
     formeObj.children("select").find("option").remove().end().append(formeOptions).change();
@@ -602,6 +621,7 @@ function addtotable() {
     for(var move in poke.moves) {
         if(poke.moves[move].category !== "Status" && poke.moves[move].name !== "(No Move)"){
             var row = table.row.add([name, poke.moves[move].name, "",""]).node();
+
             $(row).attr("data-move", move);
             $(row).attr("data-mode", "def");
             $(row).attr("data-pokemon", JSON.stringify(poke));
@@ -1185,7 +1205,7 @@ $(document).ready(function() {
     var table = $('#damage-table').DataTable({
                     'rowsGroup':[0,1], //there is no reason to have column 1 in rowsGroup, but it stops a bug where the table swaps row order after every draw update 
                     paging: false, searching: true, info:false,dom: 'Bfrtip', buttons: ['copy', 'csv', 'excel'],
-                    //'columnDefs': [{'width': '20em', 'targets': 0}],
+                    'columnDefs': [ {'targets' : -1, 'data': null,  'className': "dt-center editor-delete", 'defaultContent': '<img src="image_res/298889_x_icon.png" width="20px" />', 'orderable': false} ],
                     "fnRowCallback": function(nRow, aData, iDisplayIndex, iDisplayIndexFull) {
                                         var pokes = $('#damage-table').DataTable().column(0).data().unique().toArray();
                                         var index = Array.prototype.indexOf.call(pokes,aData[0]);
@@ -1207,9 +1227,24 @@ $(document).ready(function() {
                                         $('td', nRow).css("background-color", color);
 
     }});
-    $('#damage-table').on('click', 'tr', function () {
-        var data = table.row(this).data();
-        if (data) table.rows( function ( idx, aData, node ) {return aData[0] === data[0];} ).remove().draw();
+    $('#damage-table').on('click', 'td', function () {
+        if (table.cell(this).node().classList.contains('editor-delete')) {
+            var data = table.row(this).remove();
+            table.draw();
+        } else {
+            var field = new Field();
+            p1 = new Pokemon($("#p1"));
+            var row = table.row(this).node();
+            var pstr = $(row).attr('data-pokemon');
+            p2 = JSON.parse(pstr);
+            damageResults = calculateAllMoves(p1, p2, field); 
+            var move = table.row(this).data();
+            for (var i = 0; i < 4; i++) {
+                if (damageResults[0][i].description.indexOf(move[1]) > 0) {
+                    navigator.clipboard.writeText(damageResults[0][i].description+": "+damageResults[0][i].damage[0]+"-"+damageResults[0][i].damage[damageResults[0][i].damage.length-1]+" ("+move[2]+ ") -- " + move[3]);
+                }
+            }
+        }
     });
     table.columns.adjust().draw();
     $("#gen9").prop("checked", true);
