@@ -1205,9 +1205,11 @@ $(document).ready(function() {
     var table = $('#damage-table').DataTable({
                     'rowsGroup':[0,1], //there is no reason to have column 1 in rowsGroup, but it stops a bug where the table swaps row order after every draw update 
                     paging: false, searching: true, info:false,dom: 'Bfrtip', buttons: ['copy', 'csv', 'excel'],
-                    'columnDefs': [ {'targets' : -1, 'data': null,  'className': "dt-center editor-delete", 'defaultContent': '<img src="image_res/298889_x_icon.png" width="20px" />', 'orderable': false} ],
+                    'columnDefs': [{'targets':3, 'width' : "1em"},
+                                    {'targets' : -1, 'data': null,  'className': "dt-center editor-delete", 'defaultContent': '<img src="image_res/298889_x_icon.png" width="20px" />', 'orderable': false} ],
                     "fnRowCallback": function(nRow, aData, iDisplayIndex, iDisplayIndexFull) {
-                                        var pokes = $('#damage-table').DataTable().column(0).data().unique().toArray();
+                                        var filteredRows = table.rows({'filter': 'applied'});
+                                        var pokes = Array.from(new Set(filteredRows.data().toArray().map(x => x[0])));
                                         var index = Array.prototype.indexOf.call(pokes,aData[0]);
                                         var color;
                                         if (index % 2 === 0) {
