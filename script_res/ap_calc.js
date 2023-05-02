@@ -618,21 +618,36 @@ function addtotable() {
     }
     
     var table = $("#damage-table").DataTable();
-    for(var move in poke.moves) {
-        if(poke.moves[move].category !== "Status" && poke.moves[move].name !== "(No Move)"){
-            var row = table.row.add([name, poke.moves[move].name, "",""]).node();
-
-            $(row).attr("data-move", move);
-            $(row).attr("data-mode", "def");
+   
+    if (table.rows( function ( idx, aData, node ) {return aData[0] === name;})[0].length == 0){
+        for(var i = 0; i < 4; i++) {
+            var row = table.row.add([name, "", "",""]).node();
+            $(row).attr("data-move", i);
+            $(row).attr("data-mode", "atk");
             $(row).attr("data-pokemon", JSON.stringify(poke));
         }
     }
-    for(var i = 0; i < 4; i++) {
-        var row = table.row.add([name, "", "",""]).node();
-        $(row).attr("data-move", i);
-        $(row).attr("data-mode", "atk");
-        $(row).attr("data-pokemon", JSON.stringify(poke));
+    for(var move in poke.moves) {
+        console.log(poke.moves[move]);
+        if(poke.moves[move].category !== "Status" && poke.moves[move].name !== "(No Move)"){
+            var moveName = poke.moves[move].name;
+            if (moveName === "Rage Fist" || moveName === "Last Respects") {
+                moveName = moveName + " (" + poke.moves[move].bp*poke.moves[move].timesAffected + " BP)"
+            } else if (moveName === "Assurance" && poke.moves[move].isDouble) {
+                moveName = moveName + " (" + poke.moves[move].bp*(1+poke.moves[move].isDouble) + " BP)"
+            } else if (poke.moves[move].hits > 1) {
+                moveName = moveName + " (" + poke.moves[move].hits + " hits)";
+            }
+            console.log(moveName)
+            if (table.rows( function ( idx, aData, node ) {return aData[0] === name && aData[1] === moveName;})[0].length == 0){
+                var row = table.row.add([name, moveName, "",""]).node();
+                $(row).attr("data-move", move);
+                $(row).attr("data-mode", "def");
+                $(row).attr("data-pokemon", JSON.stringify(poke));
+            }
+        }
     }
+
     calculate(); 
     table.draw();
 }
@@ -694,7 +709,8 @@ function calculate() {
         koChanceText = patk.moves[m_num].bp === 0 && patk.moves[m_num].category !== "Status"? '<a href="https://www.youtube.com/watch?v=NFZjEgXIl1E&t=21s">how</a>'
                   : getKOChanceText(result.damage, patk.moves[m_num], pdef, field.getSide(side), patk.ability === 'Bad Dreams');
         var d = this.data();
-        d[1] = patk.moves[m_num].name;
+        if($(row).attr("data-mode") === "atk")
+            d[1] = patk.moves[m_num].name;
         d[2] = damageText;
         d[3] = koChanceText;
         this.data(d);
@@ -1203,10 +1219,10 @@ function getSelectOptions(arr, sort, defaultIdx) {
 
 $(document).ready(function() {
     var table = $('#damage-table').DataTable({
-                    'rowsGroup':[0,1], //there is no reason to have column 1 in rowsGroup, but it stops a bug where the table swaps row order after every draw update 
+                    'rowsGroup':[0,4,1], //there is no reason to have column 1 in rowsGroup, but it stops a bug where the table swaps row order after every draw update 
                     paging: false, searching: true, info:false,dom: 'Bfrtip', buttons: ['copy', 'csv', 'excel'],
                     'columnDefs': [{'targets':3, 'width' : "1em"},
-                                    {'targets' : -1, 'data': null,  'className': "dt-center editor-delete", 'defaultContent': '<img src="image_res/298889_x_icon.png" width="20px" />', 'orderable': false} ],
+                                    {'targets' : 4, 'data': 'a',  'className': "dt-center editor-delete", 'defaultContent': '<img src="image_res/298889_x_icon.png" width="20px" />'} ],
                     "fnRowCallback": function(nRow, aData, iDisplayIndex, iDisplayIndexFull) {
                                         var filteredRows = table.rows({'filter': 'applied'});
                                         var pokes = Array.from(new Set(filteredRows.data().toArray().map(x => x[0])));
@@ -1231,8 +1247,8 @@ $(document).ready(function() {
     }});
     $('#damage-table').on('click', 'td', function () {
         if (table.cell(this).node().classList.contains('editor-delete')) {
-            var data = table.row(this).remove();
-            table.draw();
+            var data = table.row(this).data();
+            if (data) table.rows( function ( idx, aData, node ) {return aData[0] === data[0];} ).remove().draw();
         } else {
             var field = new Field();
             p1 = new Pokemon($("#p1"));
