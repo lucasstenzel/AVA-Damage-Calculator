@@ -213,6 +213,24 @@ $(".ability-advanced").bind("keyup change", function () {
 var lastTerrain = "noterrain";
 var lastManualWeather = "";
 var lastAutoWeather = ["", ""];
+var ruins = [['tablets-of-ruin','Tablets of Ruin'],['vessel-of-ruin','Vessel of Ruin'],['sword-of-ruin','Sword of Ruin'],['beads-of-ruin', 'Beads of Ruin']];
+var lastRuins = {'tablets-of-ruin':false,'vessel-of-ruin':false,'sword-of-ruin':false,'beads-of-ruin':false};
+
+function autoSetRuin(ability1, ability2) {
+    for (i in ruins) {
+        lastRuins[ruins[i][0]] = $("input:checkbox[id='"+ruins[i][0]+"']").prop('checked');
+        if (ability1 == ruins[i][1] || ability2 == ruins[i][1])
+            $("input:checkbox[id='"+ruins[i][0]+"']").prop("checked", true);
+
+    }
+}
+
+function resetRuin() {
+    for (i in ruins) {
+        $("input:checkbox[id='"+ruins[i][0]+"']").prop("checked", lastRuins[ruins[i][0]])
+    }
+}
+
 function autoSetType(p, item) {
     var ab = $(p + " select.ability").val();
     
@@ -628,7 +646,6 @@ function addtotable() {
         }
     }
     for(var move in poke.moves) {
-        console.log(poke.moves[move]);
         if(poke.moves[move].category !== "Status" && poke.moves[move].name !== "(No Move)"){
             var moveName = poke.moves[move].name;
             if (moveName === "Rage Fist" || moveName === "Last Respects") {
@@ -638,7 +655,6 @@ function addtotable() {
             } else if (poke.moves[move].hits > 1) {
                 moveName = moveName + " (" + poke.moves[move].hits + " hits)";
             }
-            console.log(moveName)
             if (table.rows( function ( idx, aData, node ) {return aData[0] === name && aData[1] === moveName;})[0].length == 0){
                 var row = table.row.add([name, moveName, "",""]).node();
                 $(row).attr("data-move", move);
@@ -677,11 +693,16 @@ function calculate() {
         var row = this.node();
         var pstr = $(row).attr('data-pokemon');
         p2 = JSON.parse(pstr);
+        
+        autoSetRuin(p1.ability,p2.ability); 
+        var field = new Field();
+        
         if(pstr in cache) damageResults = cache[pstr];
         else {
             damageResults = calculateAllMoves(p1, p2, field); 
             cache[pstr] = damageResults;
         }
+
 
         var patk,pdef,side;
         var m_num = Number($(row).attr("data-move"))
@@ -714,6 +735,7 @@ function calculate() {
         d[2] = damageText;
         d[3] = koChanceText;
         this.data(d);
+        resetRuin();
     });
     table.draw(); 
 }
