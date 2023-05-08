@@ -1280,8 +1280,9 @@ $(document).ready(function() {
             damageResults = calculateAllMoves(p1, p2, field); 
             var move = table.row(this).data();
             for (var i = 0; i < 4; i++) {
-                if (damageResults[0][i].description.indexOf(move[1]) > 0) {
-                    navigator.clipboard.writeText(damageResults[0][i].description+": "+damageResults[0][i].damage[0]+"-"+damageResults[0][i].damage[damageResults[0][i].damage.length-1]+" ("+move[2]+ ") -- " + move[3]);
+                var p = 1-$('#atkdefswitch').is(":checked");
+                if (damageResults[p][i].description.indexOf(move[1]) > 0) {
+                    navigator.clipboard.writeText(damageResults[p][i].description+": "+damageResults[p][i].damage[0]+"-"+damageResults[p][i].damage[damageResults[p][i].damage.length-1]+" ("+move[2].replace(/<[^>]*>/g, '')+ ") -- " + move[3]);
                 }
             }
         }
