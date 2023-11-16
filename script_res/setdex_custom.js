@@ -1,11 +1,8 @@
 var showdownToCalcFormes = [
     ["Pumpkaboo", "Pumpkaboo-Average"],
     ["Gourgeist", "Gourgeist-Average"],
-    ["Wormadan-Sandy", "Wormadan-G"],
-    ["Wormadan-Trash", "Wormadan-S"],
     ["Groudon-Primal", "Groudon"],
     ["Kyogre-Primal", "Kyogre"],
-    ["Zygarde-10%", "Zygarde"],
     ["Zygarde-Complete", "Zygarde"],
     ["Zacian-Crowned", "Zacian"],
     ["Zamazenta-Crowned", "Zamazenta"],
@@ -21,7 +18,6 @@ var showdownToCalcFormes = [
     ["Shellos-East", "Shellos"],
     ["Gastrodon-East", "Gastrodon"],
     ["Basculin-Blue-Striped", "Basculin"],
-    ["Basculin-White-Striped", "Basculin"],
     ["Deerling-Summer", "Deerling"],
     ["Deerling-Autumn", "Deerling"],
     ["Deerling-Winter", "Deerling"],
@@ -42,6 +38,8 @@ var showdownToCalcFormes = [
     ["Dudunsparce-Three-Segment", "Dudunsparce-Big"],
     ["Tatsugiri-Droopy", "Tatsugiri"],
     ["Tatsugiri-Stretchy", "Tatsugiri"],
+    ["Poltchageist-Artisan", "Poltchageist"],
+    ['Sinistcha-Masterpiece','Sinistcha']
 ];
 
 var calcToShowdownFormes = [
@@ -59,9 +57,7 @@ var calcToShowdownFormes = [
 var saveToCalcFormes = [
     ["Darmanitan-Zen", "Darmanitan"],
     ["Darmanitan-Galar-Zen", "Darmanitan-Galar"],
-    ["Zygarde 50%", "Zygarde"],
-    ["Zygarde 10%", "Zygarde"],
-    ["Zygarde Complete", "Zygarde"],
+    ["Zygarde-Complete", "Zygarde"],
     ["Zacian-Crowned", "Zacian"],
     ["Zamazenta-Crowned", "Zamazenta"],
     ["Palafin-Hero", "Palafin"],
@@ -157,6 +153,26 @@ function cookiesToLocalStorage(custom_cookies, generation) {
             saveSets(generation, customFormat, p, set);
         }
     }
+}
+
+//Check for any sets that have the old naming convention
+if (SETDEX_CUSTOM_SV["Tauros-Paldea"]) {
+    for (set in SETDEX_CUSTOM_SV["Tauros-Paldea"]) {
+        saveSets(9, SETDEX_CUSTOM_SV["Tauros-Paldea"][set], "Tauros-Paldea-Combat", set);
+    }
+    delete SETDEX_CUSTOM_SV["Tauros-Paldea"];
+}
+if (SETDEX_CUSTOM_SV["Tauros-Paldea-Water"]) {
+    for (set in SETDEX_CUSTOM_SV["Tauros-Paldea-Water"]) {
+        saveSets(9, SETDEX_CUSTOM_SV["Tauros-Paldea-Water"][set], "Tauros-Paldea-Aqua", set);
+    }
+    delete SETDEX_CUSTOM_SV["Tauros-Paldea-Water"];
+}
+if (SETDEX_CUSTOM_SV["Tauros-Paldea-Fire"]) {
+    for (set in SETDEX_CUSTOM_SV["Tauros-Paldea-Fire"]) {
+        saveSets(9, SETDEX_CUSTOM_SV["Tauros-Paldea-Fire"][set], "Tauros-Paldea-Blaze", set);
+    }
+    delete SETDEX_CUSTOM_SV["Tauros-Paldea-Fire"];
 }
 
 var deletecustom = function () {
