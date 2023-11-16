@@ -194,6 +194,7 @@ var ITEMS_BW_NO_GEMS = ITEMS_DPP.concat([
     'Ring Target',  //is actually implemented
     'Rocky Helmet',
     'Normal Gem',
+    'Big Nugget', //pretty much only here because of Fling 130 BP Gen 8+
 ]);
 
 var ITEMS_BW = ITEMS_BW_NO_GEMS.concat(ITEMS_GEMS);
@@ -363,13 +364,17 @@ var NEW_ITEMS_SV = [
     'Mirror Herb',  //copies stat boosts from last stat boosting move from opponent, no calc functionality
     'Covert Cloak', //item Shield Dust, no calc functionality
     'Loaded Dice',  //increases chances of hitting more times with multi hit moves
-    'Ability Shield',   //prevents other mons from changing ability, may have f u t u r e calc functionality
+    'Ability Shield',   //prevents other mons from changing ability
     'Booster Energy',   //activates paradox mon abilities without sun/electric terrain
     'Clear Amulet', //item Clear Body
     'Punching Glove',   //item Iron Fist, no contact, probably stacks with Iron Fist
-    //'Adamant Crystal',  //Origin Dialga item, commented out in case it changes to a key item because if it doesn't then the Origin forms suck lol
-    //'Lustrous Globe',   //Origin Palkia item, commented out in case it changes to a key item because if it doesn't then the Origin forms suck lol
-    //'Griseous Core',    //Origin Giratina item, commented out in case it changes to a key item because if it doesn't then the Origin forms suck lol
+    'Adamant Crystal',  //Origin Dialga item, also acts like Adamant Orb
+    'Lustrous Globe',   //Origin Palkia item, also acts like Lustrous Orb
+    'Griseous Core',    //Origin Giratina item, also acts like Griseous Orb
+    'Fairy Feather',    //Non-Plate equivalent of Pixie Plate
+    'Hearthflame Mask',     //Fire Ogerpon, Atk Embody Aspect
+    'Wellspring Mask',      //Water Ogerpon, SpD Embody Aspect
+    'Cornerstone Mask',     //Rock Ogerpon, Def Embody Aspect
 ];
 
 var ITEMS_SV = ITEMS_SS.concat(NEW_ITEMS_SV);
@@ -416,6 +421,7 @@ function getItemBoostType(item) {
         case 'Twisted Spoon':
             return 'Psychic';
         case 'Pixie Plate':
+        case 'Fairy Feather':
             return 'Fairy';
         case 'Sky Plate':
         case 'Sharp Beak':
@@ -454,9 +460,15 @@ function getItemDualTypeBoost(item, species) {
         case 'Lustrous Orb':
             if (species === 'Palkia') return 'Water Dragon';
         case 'Griseous Orb':
-            if (species === 'Giratina-Origin') return 'Ghost Dragon';
+            if ((species === 'Giratina-Origin' && gen <= 8) || (species === 'Giratina' && gen >= 9)) return 'Ghost Dragon';
         case 'Soul Dew':
             if ((species === 'Latias' || species === 'Latios') && gen >= 7) return 'Dragon Psychic';
+        case 'Adamant Crystal':
+            if (species === 'Dialga-Origin') return 'Steel Dragon';
+        case 'Lustrous Globe':
+            if (species === 'Palkia-Origin') return 'Water Dragon';
+        case 'Griseous Core':
+            if (species === 'Giratina-Origin') return 'Ghost Dragon';
         default:
             return '';
     }
@@ -506,7 +518,7 @@ function getBerryResistType(berry) {
 }
 
 function getFlingPower(item) {
-    return item === 'Iron Ball' ? 130
+    return item === 'Iron Ball' || (item === 'Big Nugget' && gen >=8) ? 130
         : ['Hard Stone','Room Service'].indexOf(item) !== -1 ? 100
         : item.indexOf('Plate') !== -1 || ['Deep Sea Tooth','Thick Club','Grip Claw'].indexOf(item) !== -1 ? 90
         : (item.indexOf('ite') !== -1 && item == 'Eviolite') || ['Assault Vest','Weakness Policy','Blunder Policy', 
@@ -522,7 +534,7 @@ function getFlingPower(item) {
             'Razor Fang','Soul Dew','Spell Tag','Toxic Orb','Twisted Spoon', 'Absorb Bulb', 'Adrenaline Orb',
             'Berry Juice','Binding Band','Eject Button','Float Stone','Light Clay', 'Luminous Moss', 
             'Metronome','Protective Pads','Shell Bell','Throat Spray','Covert Cloak','Loaded Dice',
-            'Ability Shield','Booster Energy','Clear Amulet','Punching Glove'].indexOf(item) !== -1 ? 30
+            'Ability Shield','Booster Energy','Clear Amulet','Punching Glove', 'Big Nugget'].indexOf(item) !== -1 ? 30
         : 10;
 }
 
@@ -796,8 +808,11 @@ var LOCK_ITEM_LOOKUP = {
     'Ultra Necrozma': 'Ultranecrozium Z',
     'Zacian-Crowned': 'Rusted Sword',
     'Zamazenta-Crowned': 'Rusted Shield',
-    //'Dialga-Origin': 'Adamant Crystal', //Game Freak please change this
-    //'Palkia-Origin': 'Lustrous Globe',  //Right now these are just Zacian and Zamazenta transformations without the base stat boosts
+    'Dialga-Origin': 'Adamant Crystal', 
+    'Palkia-Origin': 'Lustrous Globe',
+    'Ogerpon-Wellspring': 'Wellspring Mask',
+    'Ogerpon-Hearthflame': 'Hearthflame Mask',
+    'Ogerpon-Cornerstone': 'Cornerstone Mask',
 };
 
 function cantRemoveItem(defItem, defSpecies, terrain) {
